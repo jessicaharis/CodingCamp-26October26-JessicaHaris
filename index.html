@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense & Budget Visualizer</title>
+
+  <!-- Load our single CSS file -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Apply the saved theme before the page paints to avoid a flash of the wrong theme -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("expenseBudgetTheme") === "dark") {
+          document.documentElement.classList.add("dark-theme");
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <!-- Page header with the website title and theme toggle -->
+  <header class="site-header">
+    <h1>Expense &amp; Budget Visualizer</h1>
+    <p class="subtitle">Track your spending in Indonesian Rupiah</p>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark and light mode" aria-pressed="false" title="Switch to dark mode">
+      <span class="icon-moon" aria-hidden="true">🌙</span>
+      <span class="icon-sun" aria-hidden="true">☀️</span>
+    </button>
+  </header>
+
+  <main class="dashboard">
+    <!-- Total expenses summary + spending limit (prominent) -->
+    <section class="card summary-card" aria-label="Total expenses">
+      <span class="card-label">Total Expenses</span>
+      <span id="totalExpenses" class="total-amount">Rp 0</span>
+
+      <div class="limit-control">
+        <label for="spendingLimit">Spending Limit (IDR)</label>
+        <div class="limit-input-row">
+          <input type="number" id="spendingLimit" name="spendingLimit" placeholder="e.g. 500000" min="0" step="1" inputmode="numeric" autocomplete="off">
+          <button type="button" id="setLimitBtn" class="btn-secondary">Set</button>
+        </div>
+        <p id="limitMessage" class="limit-message" aria-live="polite"></p>
+      </div>
+
+      <p id="limitWarning" class="limit-warning" role="alert" hidden></p>
+    </section>
+
+    <!-- Transaction form -->
+    <section class="card form-card">
+      <h2>Add Transaction</h2>
+      <form id="transactionForm" novalidate>
+        <div class="field">
+          <label for="itemName">Item Name</label>
+          <input type="text" id="itemName" name="itemName" placeholder="e.g. Lunch at café" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="amount">Amount (IDR)</label>
+          <input type="number" id="amount" name="amount" placeholder="e.g. 25000" min="1" step="1" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Fun">Fun</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Add Transaction</button>
+        <p id="formMessage" class="form-message" role="alert" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- Pie chart -->
+    <section class="card chart-card">
+      <h2>Spending by Category</h2>
+      <div class="chart-wrap">
+        <canvas id="expenseChart" aria-label="Pie chart of spending by category"></canvas>
+      </div>
+      <p id="chartEmpty" class="empty-message">No data to show yet. Add a transaction to see the chart.</p>
+    </section>
+
+    <!-- Transaction list (with sorting) -->
+    <section class="card list-card">
+      <div class="list-header">
+        <h2>Transactions</h2>
+        <div class="sort-control">
+          <label for="sortSelect">Sort by</label>
+          <select id="sortSelect" name="sortSelect">
+            <option value="newest">Newest first</option>
+            <option value="amount-asc">Amount: Low to High</option>
+            <option value="amount-desc">Amount: High to Low</option>
+            <option value="category">Category (A-Z)</option>
+          </select>
+        </div>
+      </div>
+      <ul id="transactionList" class="transaction-list"></ul>
+      <p id="listEmpty" class="empty-message">No transactions yet. Add one above to get started.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Data is saved in your browser only.</p>
+  </footer>
+
+  <!-- Chart.js library loaded from a CDN (required feature) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Load our single JavaScript file -->
+  <script src="js/script.js"></script>
+</body>
+</html>

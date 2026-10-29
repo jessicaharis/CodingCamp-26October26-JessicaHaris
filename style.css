@@ -1,0 +1,509 @@
+/* Expense & Budget Visualizer - styles
+   This is the only CSS file in the project.
+   Design: soft cream background, dark green accents, white cards.
+   Optional features: dark/light theme, sorting, spending limit. */
+
+/* ---- Color and style variables (light theme defaults) ---- */
+:root {
+  --cream-bg: #f6f3ea;
+  --card-bg: #ffffff;
+  --dark-green: #1b4332;
+  --green-accent: #2d6a4f;
+  --green-soft: #95d5b2;
+  --text: #2c3a2e;
+  --muted: #6b7c6d;
+  --border: #e2e6e0;
+  --field-bg: #fbfbf8;
+  --danger: #c0392b;
+  --danger-hover: #962d22;
+  --success: #2d6a4f;
+  --shadow: 0 4px 14px rgba(27, 67, 50, 0.08);
+  --shadow-hover: 0 6px 18px rgba(27, 67, 50, 0.14);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+/* ---- Dark theme overrides ---- */
+:root.dark-theme {
+  --cream-bg: #141a16;
+  --card-bg: #1e2823;
+  --text: #e7eee9;
+  --muted: #9fb0a4;
+  --border: #344038;
+  --field-bg: #243029;
+  --danger: #ff7a6b;
+  --success: #74c69d;
+}
+
+/* ---- Base page ---- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Arial, Helvetica, sans-serif;
+  background-color: var(--cream-bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* ---- Header ---- */
+.site-header {
+  position: relative;
+  background-color: var(--dark-green);
+  color: #ffffff;
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+  color: var(--green-soft);
+}
+
+/* ---- Theme toggle button ---- */
+.theme-toggle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+.theme-toggle:active {
+  transform: scale(0.94);
+}
+
+/* Show the icon that matches the current theme (no JS needed for the icon) */
+.icon-sun {
+  display: none;
+}
+
+:root.dark-theme .icon-moon {
+  display: none;
+}
+
+:root.dark-theme .icon-sun {
+  display: inline;
+}
+
+/* ---- Dashboard grid layout ---- */
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+/* Desktop: two columns, summary and list span full width */
+@media (min-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr 1fr;
+    padding: 32px 24px;
+  }
+
+  .summary-card,
+  .list-card {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- Cards ---- */
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  color: var(--dark-green);
+}
+
+/* ---- Summary card ---- */
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 24px;
+}
+
+.card-label {
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.total-amount {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--dark-green);
+}
+
+/* Total turns red when the spending limit is exceeded */
+.total-amount.over-limit,
+:root.dark-theme .total-amount.over-limit {
+  color: var(--danger);
+}
+
+/* ---- Spending limit control ---- */
+.limit-control {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 14px;
+}
+
+.limit-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.limit-input-row input {
+  flex: 1;
+}
+
+.limit-message {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  min-height: 1.1em;
+}
+
+.limit-message.error {
+  color: var(--danger);
+}
+
+.limit-message.success {
+  color: var(--success);
+}
+
+/* Warning shown when total exceeds the limit.
+   No display rule is set here so the "hidden" attribute can hide it. */
+.limit-warning {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #f3c9c3;
+  background-color: #fbeae7;
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+/* ---- Form ---- */
+.field {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  color: var(--text);
+  background-color: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--green-accent);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--green-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+  background-color: var(--dark-green);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Secondary button (used by the spending limit control) */
+.btn-secondary {
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--green-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--dark-green);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
+/* ---- Form validation message ---- */
+.form-message {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+  min-height: 1.2em;
+}
+
+.form-message.error {
+  color: var(--danger);
+}
+
+.form-message.success {
+  color: var(--success);
+}
+
+/* ---- Chart ---- */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  height: 260px;
+}
+
+.chart-card.has-data .chart-wrap {
+  display: block;
+}
+
+.chart-card:not(.has-data) .chart-wrap {
+  display: none;
+}
+
+/* ---- Empty-state message ---- */
+.empty-message {
+  text-align: center;
+  color: var(--muted);
+  font-style: italic;
+  padding: 16px 8px;
+  margin: 0;
+}
+
+.chart-card:not(.has-data) .empty-message,
+.list-card:not(.has-data) .empty-message {
+  display: block;
+}
+
+.chart-card.has-data .empty-message,
+.list-card.has-data .empty-message {
+  display: none;
+}
+
+/* ---- Transaction list header with sorting ---- */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.list-header h2 {
+  margin: 0;
+}
+
+.sort-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-control label {
+  margin: 0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.sort-control select {
+  width: auto;
+  min-width: 170px;
+}
+
+/* ---- Transaction list ---- */
+.transaction-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background-color: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.tx-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tx-name {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tx-category {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: var(--green-soft);
+  color: var(--dark-green);
+}
+
+.tx-amount {
+  font-weight: 700;
+  color: var(--dark-green);
+  white-space: nowrap;
+}
+
+.delete-btn {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--danger);
+  background-color: #fbeae7;
+  border: 1px solid #f3c9c3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+/* ---- Footer ---- */
+.site-footer {
+  text-align: center;
+  padding: 24px 16px 32px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ---- Dark theme: component color tweaks ---- */
+:root.dark-theme .site-header {
+  background-color: #0e2418;
+}
+
+:root.dark-theme .card h2,
+:root.dark-theme .total-amount,
+:root.dark-theme .tx-amount {
+  color: #8fd6a8;
+}
+
+:root.dark-theme .tx-category {
+  background-color: #2f5a44;
+  color: #c8ecd4;
+}
+
+:root.dark-theme .delete-btn {
+  background-color: #3a2422;
+  border-color: #5a342f;
+  color: #ff9a8d;
+}
+
+:root.dark-theme .delete-btn:hover {
+  background-color: var(--danger);
+  color: #1a1a1a;
+}
+
+:root.dark-theme .limit-warning {
+  background-color: #3a2422;
+  border-color: #5a342f;
+  color: #ffb3a8;
+}
+
+:root.dark-theme input::placeholder {
+  color: #8aa091;
+}
+
+/* ---- Small screens: keep amounts readable ---- */
+@media (max-width: 480px) {
+  .total-amount {
+    font-size: 1.9rem;
+  }
+
+  .site-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .transaction-item {
+    flex-wrap: wrap;
+  }
+}
